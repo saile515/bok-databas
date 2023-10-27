@@ -2,6 +2,18 @@
 @tailwind components;
 @tailwind utilities;
 
+body {
+    background-color: #fafafa;
+    color: #18181b;
+}
+
+@media (prefers-color-scheme: dark) {
+    body {
+        background-color: #18181b;
+        color: #fafafa;
+    }
+}
+
 @layer components {
     .btn-primary {
         @apply bg-blue-700 dark:bg-blue-300 text-blue-50 dark:text-blue-900 rounded px-2 py-1;

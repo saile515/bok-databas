@@ -1,3 +1,13 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer components {
+    .btn-primary {
+        @apply bg-blue-700 dark:bg-blue-300 text-blue-50 dark:text-blue-900 rounded px-2 py-1;
+    }
+
+    .input-field {
+        @apply bg-zinc-200 dark:bg-zinc-800 rounded border border-zinc-500 dark:border-zinc-700 shadow-inner m-2 px-2 py-1;
+    }
+}

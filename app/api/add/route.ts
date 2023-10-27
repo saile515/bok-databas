@@ -29,7 +29,7 @@ interface RequestBody {
     admin_key: string;
 }
 
-export default async function handle(req: NextRequest) {
+export async function POST(req: NextRequest) {
     const { book_data, admin_key }: RequestBody = await req.json();
 
     if (admin_key != process.env.ADMIN_KEY) {

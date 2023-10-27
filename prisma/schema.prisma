@@ -1,0 +1,32 @@
+generator client {
+    provider = "prisma-client-js"
+}
+
+datasource db {
+    provider = "postgresql"
+    url      = env("DATABASE_URL")
+}
+
+model Book {
+    id                    Int      @id @default(autoincrement())
+    title                 String
+    part_of_series        Boolean  @default(false)
+    series                String?
+    part_in_series        Int?
+    total_parts_in_series Int?
+    themes                String[]
+    authors               String[]
+    chapter_length        Int
+    difficulty            Int
+    age_lower             Int
+    age_upper             Int
+    comment               String?
+    illustrations         String
+    awards                String[]
+    teachers_guide        String?
+    filmatized            Boolean  @default(false)
+    first_paragraph       String
+    abstract_school_words String[]
+
+    @@map("books")
+}

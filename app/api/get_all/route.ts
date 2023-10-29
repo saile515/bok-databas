@@ -1,12 +1,12 @@
-import { PrismaClient } from "@prisma/client"
-import { NextRequest } from "next/server"
+import { PrismaClient } from "@prisma/client";
+import { NextRequest } from "next/server";
 
 const entires_per_page = 20;
 
 const prisma = new PrismaClient();
 
 interface RequestBody {
-    page: number
+    page: number;
 }
 
 export async function POST(req: NextRequest) {

@@ -3,7 +3,7 @@ import { NextRequest } from "next/server"
 
 const prisma = new PrismaClient();
 
-interface BookData {
+export interface BookData {
     title: string;
     part_of_series: boolean;
     series?: string;

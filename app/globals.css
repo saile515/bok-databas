@@ -3,6 +3,7 @@
 @tailwind utilities;
 
 body {
+    font-family: system-ui, sans-serif;
     background-color: #fafafa;
     color: #18181b;
 }
@@ -20,6 +21,10 @@ body {
     }
 
     .input-field {
-        @apply bg-zinc-200 dark:bg-zinc-800 rounded border border-zinc-500 dark:border-zinc-700 shadow-inner m-2 px-2 py-1;
+        @apply bg-zinc-100 dark:bg-zinc-800 rounded border border-zinc-300 dark:border-zinc-700 shadow-inner px-2 py-1;
+    }
+
+    .focus-outline {
+        @apply focus:ring-0 focus:ring-offset-0 focus:outline focus:outline-blue-500 focus:outline-offset-0;
     }
 }

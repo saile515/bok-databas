@@ -27,4 +27,12 @@ body {
     .focus-outline {
         @apply focus:ring-0 focus:ring-offset-0 focus:outline focus:outline-blue-500 focus:outline-offset-0;
     }
+
+    .table-cell {
+        @apply px-8 py-2;
+    }
+
+    .table-head {
+        @apply uppercase text-zinc-600 dark:text-zinc-400 text-sm;
+    }
 }

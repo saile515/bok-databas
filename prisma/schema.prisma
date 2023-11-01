@@ -25,7 +25,7 @@ model Book {
     awards                String[]
     teachers_guide        String?
     filmatized            Boolean  @default(false)
-    first_paragraph       String
+    first_paragraph       String?
     abstract_school_words String[]
 
     @@map("books")

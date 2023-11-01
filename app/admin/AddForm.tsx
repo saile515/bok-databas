@@ -179,7 +179,6 @@ export default function AddForm(props: { reset: () => void }) {
             <Input type="number" id="age_lower" label="Från ålder" required min={1} handle_change={handle_change} />
             <Input type="number" id="age_upper" label="Till ålder" required min={1} handle_change={handle_change} />
             <Input type="text" id="illustrations" label="Illustrationer" required handle_change={handle_change} />
-            <Input type="textbox" id="first_paragraph" label="Första stycket" required handle_change={handle_change} />
             <Input type="checkbox" id="part_of_series" label="Del av serie" handle_change={handle_change} />
             {state.part_of_series && (
                 <>
@@ -201,6 +200,7 @@ export default function AddForm(props: { reset: () => void }) {
                 </>
             )}
             <Input type="textbox" id="comment" label="Kommentar" handle_change={handle_change} />
+            <Input type="textbox" id="first_paragraph" label="Första stycket" handle_change={handle_change} />
             <ArrayInput id="awards" label="Priser/utmärkelser" handle_change={handle_array_change} />
             <Input type="text" id="teachers_guide" label="Lärarhandledning" handle_change={handle_change} />
             <Input type="checkbox" id="filmatized" label="Filmatiserad" handle_change={handle_change} />

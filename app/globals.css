@@ -29,10 +29,14 @@ body {
     }
 
     .table-cell {
-        @apply px-8 py-2;
+        @apply px-2 sm:px-8 py-2;
     }
 
     .table-head {
         @apply uppercase text-zinc-600 dark:text-zinc-400 text-sm;
+    }
+
+    .page-button {
+        @apply w-6 h-6 bg-zinc-300 dark:bg-zinc-700 block text-center text-sm leading-6 rounded;
     }
 }

@@ -1,38 +1,50 @@
 import Link from "next/link";
-import { PrismaClient } from "@prisma/client";
+import prisma from "./prisma";
 import type { Book } from "@prisma/client";
+import { SearchParams } from "./page";
+import SearchBox from "./SeachBox";
 
-export const entries_per_page = 20;
-const prisma = new PrismaClient();
+const entries_per_page = 20;
 
-async function PageSelector(props: { page: number }) {
-    const total_pages = 9; // (await prisma.book.count()) / entries_per_page;
+export function construct_search_params(search_params: SearchParams) {
+    return `./?page=${search_params.page}${search_params.query ? `&query=${search_params.query}` : ""}`;
+}
+
+async function PageSelector(props: { search_params: SearchParams }) {
+    const total_pages = Math.ceil((await prisma.book.count()) / entries_per_page);
 
     return (
-        <div className="flex gap-2 m-2 float-right">
-            <Link href="./?page=1" className={`page-button ${props.page < 3 ? "invisible pointer-events-none" : ""}`}>
+        <div className="flex gap-2 ml-auto">
+            <Link
+                href={construct_search_params({ ...props.search_params, page: 1 })}
+                className={`page-button ${props.search_params.page < 3 ? "invisible pointer-events-none" : ""}`}
+            >
                 1
             </Link>
-            <span className={`${props.page < 3 ? "invisible pointer-events-none" : ""}`}>...</span>
+            <span className={`${props.search_params.page < 3 ? "invisible pointer-events-none" : ""}`}>...</span>
             <Link
-                href={`./?page=${props.page - 1}`}
-                className={`page-button ${props.page < 2 ? "invisible pointer-events-none" : ""}`}
+                href={construct_search_params({ ...props.search_params, page: props.search_params.page - 1 })}
+                className={`page-button ${props.search_params.page < 2 ? "invisible pointer-events-none" : ""}`}
             >
-                {props.page - 1}
-            </Link>{" "}
-            <Link href="./?page=1" className="page-button bg-blue-500">
-                {props.page}
-            </Link>{" "}
+                {props.search_params.page - 1}
+            </Link>
+            <p className="page-button bg-blue-500">{props.search_params.page}</p>
             <Link
-                href={`./?page=${props.page + 1}`}
-                className={`page-button ${total_pages - props.page < 1 ? "invisible pointer-events-none" : ""}`}
+                href={construct_search_params({ ...props.search_params, page: props.search_params.page + 1 })}
+                className={`page-button ${
+                    total_pages - props.search_params.page < 1 ? "invisible pointer-events-none" : ""
+                }`}
             >
-                {props.page + 1}
-            </Link>{" "}
-            <span className={`${total_pages - props.page < 2 ? "invisible pointer-events-none" : ""}`}>...</span>
+                {props.search_params.page + 1}
+            </Link>
+            <span className={`${total_pages - props.search_params.page < 2 ? "invisible pointer-events-none" : ""}`}>
+                ...
+            </span>
             <Link
-                href={`./?page=${total_pages}`}
-                className={`page-button ${total_pages - props.page < 2 ? "invisible pointer-events-none" : ""}`}
+                href={construct_search_params({ ...props.search_params, page: total_pages })}
+                className={`page-button ${
+                    total_pages - props.search_params.page < 2 ? "invisible pointer-events-none" : ""
+                }`}
             >
                 {total_pages}
             </Link>
@@ -54,15 +66,18 @@ function BookListItem(props: { data: Book }) {
     );
 }
 
-export default async function BookBrowser(props: { page: number }) {
+export default async function BookBrowser(props: { search_params: SearchParams }) {
     const books = await prisma.book.findMany({
-        skip: props.page * entries_per_page - entries_per_page,
+        skip: props.search_params.page * entries_per_page - entries_per_page,
         take: entries_per_page,
     });
 
     return (
-        <div className="bg-zinc-100 dark:bg-zinc-800 py-4 rounded border border-zinc-300 dark:border-zinc-700 max-w-6xl overflow-auto">
-            <PageSelector page={props.page} />
+        <div className="bg-zinc-100 dark:bg-zinc-800 pb-2 rounded border border-zinc-300 dark:border-zinc-700 w-full max-w-6xl overflow-auto">
+            <div className="p-4 flex items-center">
+                <SearchBox search_params={props.search_params} />
+                <PageSelector search_params={props.search_params} />
+            </div>
             <table className="text-left w-full">
                 <thead>
                     <tr className="bg-zinc-200 dark:bg-zinc-700">

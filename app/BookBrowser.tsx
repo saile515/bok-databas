@@ -3,6 +3,7 @@ import prisma from "./prisma";
 import type { Book } from "@prisma/client";
 import { SearchParams } from "./page";
 import SearchBox from "./SeachBox";
+import Fuse from "fuse.js";
 
 const entries_per_page = 20;
 
@@ -67,10 +68,21 @@ function BookListItem(props: { data: Book }) {
 }
 
 export default async function BookBrowser(props: { search_params: SearchParams }) {
-    const books = await prisma.book.findMany({
-        skip: props.search_params.page * entries_per_page - entries_per_page,
-        take: entries_per_page,
-    });
+    const books = await prisma.book.findMany();
+
+    const fuse_options = {
+        includeScore: true,
+        keys: ["title", "authors"],
+    };
+
+    const fuse = new Fuse(books, fuse_options);
+
+    let relevant_books = props.search_params.query
+        ? fuse.search(props.search_params.query)
+        : books.map((book) => ({ item: book }));
+
+    const start_index = props.search_params.page * entries_per_page - entries_per_page;
+    relevant_books = relevant_books.slice(start_index, start_index + entries_per_page + 1);
 
     return (
         <div className="bg-zinc-100 dark:bg-zinc-800 pb-2 rounded border border-zinc-300 dark:border-zinc-700 w-full max-w-6xl overflow-auto">
@@ -89,9 +101,11 @@ export default async function BookBrowser(props: { search_params: SearchParams }
                     </tr>
                 </thead>
                 <tbody>
-                    {books.map((book_data) => (
-                        <BookListItem key={book_data.id} data={book_data} />
-                    ))}
+                    {relevant_books
+                        .map((book) => book.item)
+                        .map((book_data) => (
+                            <BookListItem key={book_data.id} data={book_data} />
+                        ))}
                 </tbody>
             </table>
         </div>

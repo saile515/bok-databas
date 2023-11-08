@@ -12,7 +12,7 @@ export default function SearchBox(props: { search_params: SearchParams }) {
     const ref = useRef(null);
 
     return (
-        <div>
+        <div className="flex flex-col sm:flex-row">
             <input
                 type="text"
                 value={query}
@@ -27,7 +27,7 @@ export default function SearchBox(props: { search_params: SearchParams }) {
                 }}
             />
             {props.search_params.query && (
-                <span className="text-zinc-700 dark:text-zinc-300 ml-4">
+                <span className="text-zinc-700 dark:text-zinc-300 my-2 sm:my-0 sm:ml-4">
                     Söker efter: <span className="font-bold">{props.search_params.query}</span>
                     <Link
                         href={construct_search_params({ ...props.search_params, query: undefined })}

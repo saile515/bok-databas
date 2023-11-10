@@ -121,6 +121,37 @@ export default async function BookBrowser(props: { search_params: SearchParams }
         ? fuse.search(props.search_params.query)
         : books.map((book) => ({ item: book }));
 
+    const sort_order_multiplier = props.search_params.sort_order == "descending" ? 1 : -1;
+    const sort_item = props.search_params.sort_item;
+    switch (sort_item) {
+        case "title":
+            relevant_books.sort((a, b) => {
+                return a.item.title.toLowerCase() < b.item.title.toLowerCase()
+                    ? -1 * sort_order_multiplier
+                    : 1 * sort_order_multiplier;
+            });
+            break;
+        case "authors":
+        case "themes":
+            relevant_books.sort((a, b) => {
+                return a.item[sort_item][0].toLowerCase() < b.item[sort_item][0].toLowerCase()
+                    ? -1 * sort_order_multiplier
+                    : 1 * sort_order_multiplier;
+            });
+            break;
+        case "difficulty":
+            relevant_books.sort((a, b) => {
+                return (a.item.difficulty - b.item.difficulty) * sort_order_multiplier;
+            });
+            break;
+        case "age":
+            relevant_books.sort((a, b) => {
+                const compare_property = props.search_params.sort_order == "descending" ? "age_lower" : "age_upper";
+                return (a.item[compare_property] - b.item[compare_property]) * sort_order_multiplier;
+            });
+            break;
+    }
+
     const start_index = props.search_params.page * entries_per_page - entries_per_page;
     relevant_books = relevant_books.slice(start_index, start_index + entries_per_page + 1);
 
@@ -149,6 +180,9 @@ export default async function BookBrowser(props: { search_params: SearchParams }
                             ))}
                     </tbody>
                 </table>
+            </div>
+            <div className="p-4 flex">
+                <PageSelector search_params={props.search_params} />
             </div>
         </div>
     );

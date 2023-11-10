@@ -1,9 +1,9 @@
 import Link from "next/link";
-import prisma from "./prisma";
 import type { Book } from "@prisma/client";
 import { SearchParams } from "./page";
 import SearchBox from "./SeachBox";
 import Fuse from "fuse.js";
+import { get_books, count_books } from "./books";
 
 const entries_per_page = 20;
 
@@ -24,7 +24,7 @@ export function construct_search_params(search_params: SearchParams) {
 }
 
 async function PageSelector(props: { search_params: SearchParams }) {
-    const total_pages = Math.ceil((await prisma.book.count()) / entries_per_page);
+    const total_pages = Math.ceil((await count_books()) / entries_per_page);
 
     return (
         <div className="flex gap-2 mt-4 sm:mt-0 ml-auto items-center">
@@ -108,8 +108,7 @@ function TableHead(props: {
 }
 
 export default async function BookBrowser(props: { search_params: SearchParams }) {
-    const books = await prisma.book.findMany();
-
+    const books = await get_books();
     const fuse_options = {
         includeScore: true,
         keys: ["title", "authors"],

@@ -87,11 +87,11 @@ function TableHead(props: { id: SortItem; label: string; search_params: SearchPa
                 })}
                 className="w-full h-full block">
                 {props.label}
-                <span className="text-lg text-center leading-5 w-6 h-4 inline-block">
+                <span className="text-lg text-center leading-3 w-6 h-3 inline-block">
                     {props.search_params.sort_order && props.search_params.sort_item == props.id
                         ? props.search_params.sort_order == "descending"
-                            ? " ⭣"
-                            : " ⭡"
+                            ? " ↓"
+                            : " ↑"
                         : ""}
                 </span>
             </Link>

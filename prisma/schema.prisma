@@ -21,7 +21,7 @@ model Book {
     difficulty            Int
     age_lower             Int
     age_upper             Int
-    comment               String?
+    text                  String?
     illustrations         String
     awards                String[]
     teachers_guide        String?

@@ -10,15 +10,17 @@ function Input(props: {
     required?: boolean;
     min?: number;
     max?: number;
-    handle_change: (event: ChangeEvent<HTMLInputElement>) => void;
+    handle_change: (event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
 }) {
+    const InputTag = props.type == "textarea" ? "textarea" : "input";
+
     return (
         <div className="w-full grid gap-2 sm:gap-0 sm:grid-cols-3 items-center">
             <label htmlFor={props.id}>
                 {props.label}
                 {props.required && <span className="text-red-500">*</span>}
             </label>
-            <input
+            <InputTag
                 type={props.type}
                 id={props.id}
                 name={props.id}
@@ -97,6 +99,7 @@ function ArrayInput(props: {
                         className={`flex items-center rounded-full bg-zinc-200 dark:bg-zinc-700 px-2 py-1 pointer-events-none 
                                                 hover:bg-red-700 hover:dark:bg-red-300 hover:text-red-50 hover:dark:text-red-900 transition-colors overflow-hidden`}>
                         <button
+                            type="button"
                             onMouseUp={() => delete_element(index)}
                             onTouchEnd={() => delete_element(index)}
                             className="w-4 h-4 leading-4 text-lg mr-1 rounded-full pointer-events-auto">
@@ -134,9 +137,10 @@ export default function AddForm(props: { reset: () => void }) {
         });
     }
 
-    function handle_change(event: ChangeEvent<HTMLInputElement>) {
+    function handle_change(event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) {
         const name = event.target.name;
-        let value: any = event.target.type != "checkbox" ? event.target.value : event.target.checked;
+        let value: any =
+            event.target.type == "checkbox" ? (event.target as HTMLInputElement).checked : event.target.value;
 
         if (event.target.type == "number") {
             value = parseInt(value);
@@ -176,16 +180,17 @@ export default function AddForm(props: { reset: () => void }) {
             <Input type="number" id="age_lower" label="Från ålder" required min={1} handle_change={handle_change} />
             <Input type="number" id="age_upper" label="Till ålder" required min={1} handle_change={handle_change} />
             <Input type="text" id="illustrations" label="Illustrationer" required handle_change={handle_change} />
-            <Input type="textbox" id="comment" label="Kommentar" handle_change={handle_change} />
+            <Input type="textarea" id="text" label="Text" required handle_change={handle_change} />
             <Input type="checkbox" id="part_of_series" label="Del av serie" handle_change={handle_change} />
             {state.part_of_series && (
                 <>
-                    <Input type="text" id="series" label="Serie" handle_change={handle_change} />
+                    <Input type="text" id="series" label="Serie" required handle_change={handle_change} />
                     <Input
                         type="number"
                         id="part_in_series"
                         label="Del i serie"
                         min={1}
+                        required
                         handle_change={handle_change}
                     />
                     <Input
@@ -193,11 +198,12 @@ export default function AddForm(props: { reset: () => void }) {
                         id="total_parts_in_series"
                         label="Antal delar i serie"
                         min={1}
+                        required
                         handle_change={handle_change}
                     />
                 </>
             )}
-            <Input type="textbox" id="first_paragraph" label="Första stycket" handle_change={handle_change} />
+            <Input type="textarea" id="first_paragraph" label="Första stycket" handle_change={handle_change} />
             <ArrayInput id="awards" label="Priser/utmärkelser" handle_change={handle_array_change} />
             <Input type="text" id="teachers_guide" label="Lärarhandledning" handle_change={handle_change} />
             <Input type="checkbox" id="filmatized" label="Filmatiserad" handle_change={handle_change} />

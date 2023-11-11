@@ -15,7 +15,7 @@ model Book {
     series                String?
     part_in_series        Int?
     total_parts_in_series Int?
-    themes                String[]
+    tags                  String[]
     authors               String[]
     chapter_length        Int
     difficulty            Int
@@ -27,7 +27,6 @@ model Book {
     teachers_guide        String?
     filmatized            Boolean  @default(false)
     first_paragraph       String?
-    abstract_school_words String[]
 
     @@map("books")
 }

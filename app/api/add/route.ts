@@ -1,31 +1,11 @@
 import { PrismaClient } from "@prisma/client";
 import { NextRequest } from "next/server";
+import { Book } from "@prisma/client";
 
 const prisma = new PrismaClient();
 
-export interface BookData {
-    title: string;
-    part_of_series: boolean;
-    series?: string;
-    part_in_series?: number;
-    total_parts_in_series?: number;
-    themes: string[];
-    authors: string[];
-    chapter_length: number;
-    difficulty: number;
-    age_lower: number;
-    age_upper: number;
-    comment?: string;
-    illustrations: string;
-    awards: string[];
-    teachers_guide?: string;
-    filmatized: boolean;
-    first_paragraph: string;
-    abstract_school_words: string[];
-}
-
 interface RequestBody {
-    book_data: BookData;
+    book_data: Book;
     admin_key: string;
 }
 

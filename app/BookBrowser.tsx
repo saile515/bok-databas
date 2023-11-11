@@ -1,6 +1,6 @@
 import Link from "next/link";
 import type { Book } from "@prisma/client";
-import { SearchParams } from "./page";
+import { SearchParams, SortItem } from "./page";
 import SearchBox from "./SeachBox";
 import Fuse from "fuse.js";
 import { get_books, count_books } from "./books";
@@ -30,27 +30,23 @@ async function PageSelector(props: { search_params: SearchParams }) {
         <div className="flex gap-2 mt-4 sm:mt-0 ml-auto items-center">
             <Link
                 href={construct_search_params({ ...props.search_params, page: 1 })}
-                className={`page-button ${props.search_params.page < 2 ? "page-button-disabled" : ""}`}
-            >
+                className={`page-button ${props.search_params.page < 2 ? "page-button-disabled" : ""}`}>
                 &lt;&lt;
             </Link>
             <Link
                 href={construct_search_params({ ...props.search_params, page: props.search_params.page - 1 })}
-                className={`page-button ${props.search_params.page < 2 ? "page-button-disabled" : ""}`}
-            >
+                className={`page-button ${props.search_params.page < 2 ? "page-button-disabled" : ""}`}>
                 &lt;
             </Link>
             <p className="w-6 text-center">{props.search_params.page}</p>
             <Link
                 href={construct_search_params({ ...props.search_params, page: props.search_params.page + 1 })}
-                className={`page-button ${total_pages - props.search_params.page < 1 ? "page-button-disabled" : ""}`}
-            >
+                className={`page-button ${total_pages - props.search_params.page < 1 ? "page-button-disabled" : ""}`}>
                 &gt;
             </Link>
             <Link
                 href={construct_search_params({ ...props.search_params, page: total_pages })}
-                className={`page-button ${total_pages - props.search_params.page < 2 ? "page-button-disabled" : ""}`}
-            >
+                className={`page-button ${total_pages - props.search_params.page < 2 ? "page-button-disabled" : ""}`}>
                 &gt;&gt;
             </Link>
         </div>
@@ -61,21 +57,18 @@ function BookListItem(props: { data: Book }) {
     return (
         <tr className="border-t border-zinc-700">
             <td className="table-cell">{props.data.title}</td>
-            <td className="table-cell">{props.data.authors.toString()}</td>
+            <td className="table-cell">{props.data.authors.join(", ")}</td>
             <td className="table-cell">{props.data.difficulty}</td>
+            <td className="table-cell">{props.data.chapter_length}</td>
             <td className="table-cell">
                 {props.data.age_lower}-{props.data.age_upper}
             </td>
-            <td className="table-cell">{props.data.themes.toString()}</td>
+            <td className="table-cell">{props.data.tags.join(", ")}</td>
         </tr>
     );
 }
 
-function TableHead(props: {
-    id: "title" | "authors" | "difficulty" | "age" | "themes";
-    label: string;
-    search_params: SearchParams;
-}) {
+function TableHead(props: { id: SortItem; label: string; search_params: SearchParams }) {
     return (
         <th className="table-cell uppercase text-zinc-600 dark:text-zinc-400 text-sm min-w-sm">
             <Link
@@ -92,8 +85,7 @@ function TableHead(props: {
                                 : undefined
                             : "descending",
                 })}
-                className="w-full h-full block"
-            >
+                className="w-full h-full block">
                 {props.label}
                 <span className="text-lg text-center leading-5 w-6 h-4 inline-block">
                     {props.search_params.sort_order && props.search_params.sort_item == props.id
@@ -111,7 +103,7 @@ export default async function BookBrowser(props: { search_params: SearchParams }
     const books = await get_books();
     const fuse_options = {
         includeScore: true,
-        keys: ["title", "authors"],
+        keys: ["title", "authors", "tags"],
     };
 
     const fuse = new Fuse(books, fuse_options);
@@ -131,7 +123,7 @@ export default async function BookBrowser(props: { search_params: SearchParams }
             });
             break;
         case "authors":
-        case "themes":
+        case "tags":
             relevant_books.sort((a, b) => {
                 return a.item[sort_item][0].toLowerCase() < b.item[sort_item][0].toLowerCase()
                     ? -1 * sort_order_multiplier
@@ -139,8 +131,9 @@ export default async function BookBrowser(props: { search_params: SearchParams }
             });
             break;
         case "difficulty":
+        case "chapter_length":
             relevant_books.sort((a, b) => {
-                return (a.item.difficulty - b.item.difficulty) * sort_order_multiplier;
+                return (a.item[sort_item] - b.item[sort_item]) * sort_order_multiplier;
             });
             break;
         case "age":
@@ -166,9 +159,10 @@ export default async function BookBrowser(props: { search_params: SearchParams }
                         <tr className="bg-zinc-200 dark:bg-zinc-700">
                             <TableHead id="title" label="Titel" search_params={props.search_params} />
                             <TableHead id="authors" label="Författare" search_params={props.search_params} />
-                            <TableHead id="difficulty" label="Svårighetsgrad" search_params={props.search_params} />
+                            <TableHead id="difficulty" label="LIX-tal" search_params={props.search_params} />
+                            <TableHead id="chapter_length" label="Kapitellängd" search_params={props.search_params} />
                             <TableHead id="age" label="Ålder" search_params={props.search_params} />
-                            <TableHead id="themes" label="Teman" search_params={props.search_params} />
+                            <TableHead id="tags" label="Taggar" search_params={props.search_params} />
                         </tr>
                     </thead>
                     <tbody>

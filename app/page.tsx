@@ -1,9 +1,11 @@
 import BookBrowser from "./BookBrowser";
 
+export type SortItem = "title" | "authors" | "difficulty" | "chapter_length" | "age" | "tags";
+
 export interface SearchParams {
     page: number;
     query?: string;
-    sort_item?: "title" | "authors" | "difficulty" | "age" | "themes";
+    sort_item?: SortItem;
     sort_order?: "ascending" | "descending";
 }
 

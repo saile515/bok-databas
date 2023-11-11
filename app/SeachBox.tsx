@@ -31,8 +31,7 @@ export default function SearchBox(props: { search_params: SearchParams }) {
                     Söker efter: <span className="font-bold">{props.search_params.query}</span>
                     <Link
                         href={construct_search_params({ ...props.search_params, query: undefined })}
-                        className="ml-2 italic underline text-zinc-500"
-                    >
+                        className="ml-2 italic underline text-zinc-500">
                         Rensa
                     </Link>
                 </span>

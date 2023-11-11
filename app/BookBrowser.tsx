@@ -9,8 +9,10 @@ const entries_per_page = 20;
 
 export function construct_search_params(search_params: SearchParams) {
     let search_params_string = "./?";
+
     for (let parameter in search_params) {
         parameter = parameter as keyof typeof search_params;
+
         search_params_string += `${
             search_params[parameter as keyof typeof search_params]
                 ? `${search_params_string.length == 3 ? "" : "&"}${parameter}=${
@@ -79,10 +81,12 @@ function TableHead(props: { id: SortItem; label: string; search_params: SearchPa
                 scroll={false}
                 href={construct_search_params({
                     ...props.search_params,
+                    // Disable sort if sort order is ascending
                     sort_item:
                         props.search_params.sort_item == props.id && props.search_params.sort_order == "ascending"
                             ? undefined
                             : props.id,
+                    // Determine sort order based on sort item and current sort order
                     sort_order:
                         props.search_params.sort_item == props.id
                             ? props.search_params.sort_order == "descending"
@@ -93,6 +97,7 @@ function TableHead(props: { id: SortItem; label: string; search_params: SearchPa
                 className="w-full h-full block">
                 {props.label}
                 <span className="text-lg text-center leading-3 w-6 h-3 inline-block">
+                    {/* Select arrow based on sort order */}
                     {props.search_params.sort_order && props.search_params.sort_item == props.id
                         ? props.search_params.sort_order == "descending"
                             ? " ↓"
@@ -113,10 +118,12 @@ export default async function BookBrowser(props: { search_params: SearchParams }
 
     const fuse = new Fuse(books, fuse_options);
 
+    // Books that match search
     let relevant_books = props.search_params.query
         ? fuse.search(props.search_params.query)
         : books.map((book) => ({ item: book }));
 
+    // Sort books based on query
     const sort_order_multiplier = props.search_params.sort_order == "descending" ? 1 : -1;
     const sort_item = props.search_params.sort_item;
     switch (sort_item) {
@@ -149,6 +156,7 @@ export default async function BookBrowser(props: { search_params: SearchParams }
             break;
     }
 
+    // Pagination
     const start_index = props.search_params.page * entries_per_page - entries_per_page;
     relevant_books = relevant_books.slice(start_index, start_index + entries_per_page + 1);
 

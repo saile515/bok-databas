@@ -120,6 +120,7 @@ export default function AddForm(props: { reset: () => void }) {
     function handle_submit(event: FormEvent) {
         event.preventDefault();
 
+        // Return if required arrays are empty
         if (!((state.authors && state.authors.length < 0) || (state.tags && state.tags.length))) {
             return;
         }
@@ -132,7 +133,7 @@ export default function AddForm(props: { reset: () => void }) {
             }),
         }).then((res) => {
             if (res.status == 200) {
-                props.reset();
+                props.reset(); // Clear form
             }
         });
     }

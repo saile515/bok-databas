@@ -29,22 +29,26 @@ async function PageSelector(props: { search_params: SearchParams }) {
     return (
         <div className="flex gap-2 mt-4 sm:mt-0 ml-auto items-center">
             <Link
+                scroll={false}
                 href={construct_search_params({ ...props.search_params, page: 1 })}
                 className={`page-button ${props.search_params.page < 2 ? "page-button-disabled" : ""}`}>
                 &lt;&lt;
             </Link>
             <Link
+                scroll={false}
                 href={construct_search_params({ ...props.search_params, page: props.search_params.page - 1 })}
                 className={`page-button ${props.search_params.page < 2 ? "page-button-disabled" : ""}`}>
                 &lt;
             </Link>
             <p className="w-6 text-center">{props.search_params.page}</p>
             <Link
+                scroll={false}
                 href={construct_search_params({ ...props.search_params, page: props.search_params.page + 1 })}
                 className={`page-button ${total_pages - props.search_params.page < 1 ? "page-button-disabled" : ""}`}>
                 &gt;
             </Link>
             <Link
+                scroll={false}
                 href={construct_search_params({ ...props.search_params, page: total_pages })}
                 className={`page-button ${total_pages - props.search_params.page < 2 ? "page-button-disabled" : ""}`}>
                 &gt;&gt;
@@ -72,6 +76,7 @@ function TableHead(props: { id: SortItem; label: string; search_params: SearchPa
     return (
         <th className="table-cell uppercase text-zinc-600 dark:text-zinc-400 text-sm min-w-sm">
             <Link
+                scroll={false}
                 href={construct_search_params({
                     ...props.search_params,
                     sort_item:
